@@ -2,7 +2,7 @@ var assert = require('assert');
 var kabsch = require('../');
 
 describe('kabsch', function () {
-  it('manual to computer test', function () {
+  it('manual to computer test', function (done) {
     var set1;
     var set2;
 
@@ -18,9 +18,7 @@ describe('kabsch', function () {
       [13, 14]
     ];
 
-    console.log();
-
-    assert(Math.abs(kabsch(set1, set2) - 18.85) < .01);
+    assert(Math.abs(kabsch(set1, set2) - 7.040085468601084) < .01);
 
     done();
   });

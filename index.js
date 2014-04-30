@@ -17,6 +17,8 @@ function kabsch(m1, m2) {
   var centroid1;
   var centroid2;
 
+  var nump;
+
   var e0;
   var r, rw, v;
   var eigenres;
@@ -29,7 +31,9 @@ function kabsch(m1, m2) {
 
   var rmsd;
 
-  assert.equal(m1.length, m2.length);
+  assert.equal(m1[0].length, m2[0].length);
+
+  nump = m1[0].length;
 
   centroid1 = centroid(m1);
   centroid2 = centroid(m2);
@@ -50,12 +54,6 @@ function kabsch(m1, m2) {
   // R = VSWt => RW = VS and we can find V from RW
   // V = RWS-1
 
-  // eigenvalues are calculated approximately
-  // if eigenvalue is zero, we may get number very close to zero
-  // but still less than zero (there is also evidence that jae could
-  // be approximating eigenvalues from left to right in the real line)
-  // that is why they should be rounded to zero
-
   eigenvals = beautify(eigenvals);
 
   sigma = sqrtd(eigenvals);
@@ -72,7 +70,8 @@ function kabsch(m1, m2) {
     omega = 1;
   }
 
-  rmsd = Math.sqrt(e0 - (sigma[0] + sigma[1] + sigma[2] * omega) / m1.length);
+  rmsd = Math.sqrt(e0 - (sigma[0][0] + sigma[1][1] + sigma[2][2] * omega) / 
+    nump);
 
   return rmsd;
 }
