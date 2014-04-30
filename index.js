@@ -1,8 +1,17 @@
+var assert = require('assert');
+
+var mmult = require('mmult');
+var transpose = require('transpose');
+var jae = require('jacobi-eigenvalue');
+
 var centroid = require('./fn/centroid');
 var translateby = require('./fn/translateby');
 var computer = require('./fn/computer');
 var computee0 = require('./fn/computee0');
 var det3x3 = require('./fn/det3x3');
+var beautify = require('./fn/beautify');
+var sqrtd = require('./fn/sqrtd');
+var invertd = require('./fn/invertd');
 
 function kabsch(m1, m2) {
   var centroid1;
@@ -14,12 +23,9 @@ function kabsch(m1, m2) {
   var eigenvals;
   var eigenvect;
 
-  var i, j;
-  var dim;
-
   var detw, detv;
   var omega;
-  var sigma;
+  var sigma, isigma;
 
   var rmsd;
 
@@ -35,33 +41,27 @@ function kabsch(m1, m2) {
 
   r = computer(m1, m2);
 
-  dim = r.length;
-
-  eigenres = jae(mult(transpose(r), r));
+  eigenres = jae(mmult(transpose(r), r), 0);
 
   eigenvals = eigenres.vals;
   eigenvect = eigenres.vect;
 
   // RtR = Wt*S^2*W. W is eigenvect, S^2 is eigenvals.
   // R = VSWt => RW = VS and we can find V from RW
+  // V = RWS-1
 
-  assert(eigenvals[0][0] > 0);
-  assert(eigenvals[1][1] > 0);
-  assert(eigenvals[2][2] > 0);
+  // eigenvalues are calculated approximately
+  // if eigenvalue is zero, we may get number very close to zero
+  // but still less than zero (there is also evidence that jae could
+  // be approximating eigenvalues from left to right in the real line)
+  // that is why they should be rounded to zero
 
-  rw = mult(r, eigenvect);
+  eigenvals = beautify(eigenvals);
 
-  sigma = [];
+  sigma = sqrtd(eigenvals);
+  isigma = invertd(sigma);
 
-  sigma[0] = Math.sqrt(eigenvals[0][0]);
-  sigma[1] = Math.sqrt(eigenvals[1][1]);
-  sigma[2] = Math.sqrt(eigenvals[2][2]);
-
-  for (j = 0; j < dim; j++) {
-    for (i = 0; i < dim; i++) {
-      v[i][j] = rw[i][j] / sigma[j];
-    }
-  }
+  v = mmult(mmult(r, eigenvect), isigma);
 
   detw = det3x3(eigenvect);
   detv = det3x3(v);
@@ -69,10 +69,12 @@ function kabsch(m1, m2) {
   if (detw * detv < 0) {
     omega = -1;
   } else {
-    omaga = 1;
+    omega = 1;
   }
 
-  rmsd = Math.sqrt(e0 - (sigma[0] + sigma[1] + sigma[2] * omega) / set1.length);
+  rmsd = Math.sqrt(e0 - (sigma[0] + sigma[1] + sigma[2] * omega) / m1.length);
+
+  return rmsd;
 }
 
 module.exports = kabsch;

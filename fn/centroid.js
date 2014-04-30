@@ -4,18 +4,18 @@ function centroid(set) {
 
   var i;
 
-  len = set.length;
+  len = set[0].length;
 
   centroid = [
     set[0][0],
-    set[0][1],
-    set[0][2]
+    set[1][0],
+    set[2][0]
   ];
 
   for (i = 1; i < len; i++) {
-    centroid[0] = (centroid[0] * i + set[i][0]) / (i + 1);
-    centroid[1] = (centroid[1] * i + set[i][1]) / (i + 1);
-    centroid[2] = (centroid[2] * i + set[i][2]) / (i + 1);
+    centroid[0] = (centroid[0] * i + set[0][i]) / (i + 1);
+    centroid[1] = (centroid[1] * i + set[1][i]) / (i + 1);
+    centroid[2] = (centroid[2] * i + set[2][i]) / (i + 1);
   }
 
   return centroid;

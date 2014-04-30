@@ -3,17 +3,20 @@ function translateby(amount, set) {
 	var i;
 	var tset;
 
-	len = set.length;
-	tset = [];
+	len = set[0].length;
+	trset = [
+		[],
+		[],
+		[]
+	];
 
 	for (i = 0; i < len; i++) {
-		tset[i] = [];
-		tset[i].push(set[i][0] - amount[0]);
-		tset[i].push(set[i][1] - amount[1]);
-		tset[i].push(set[i][2] - amount[2]);
+		trset[0][i] = set[0][i] - amount[0];
+		trset[1][i] = set[1][i] - amount[1];
+		trset[2][i] = set[2][i] - amount[2];
 	}
 
-	return tset;
+	return trset;
 }
 
 module.exports = translateby;
