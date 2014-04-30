@@ -45,7 +45,8 @@ function kabsch(m1, m2) {
 
   r = computer(m1, m2);
 
-  eigenres = jae(mmult(transpose(r), r), 0);
+
+  eigenres = jae(mmult(transpose(r), r), 0.1);
 
   eigenvals = eigenres.vals;
   eigenvect = eigenres.vect;

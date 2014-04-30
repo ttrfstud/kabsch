@@ -23,7 +23,7 @@ describe('kabsch', function () {
     done();
   });
 
-  it.skip('manual to computer test 2', function () {
+  it('manual to computer test 2', function (done) {
     var set1;
     var set2;
 
@@ -39,7 +39,7 @@ describe('kabsch', function () {
       [13, 14, 5, 2]
     ];
 
-    assert(Math.abs(kabsch(set1, set2) - 1) < .01);
+    assert(Math.abs(kabsch(set1, set2) - 8.426888859986631) < .01);
 
     done();
   });
