@@ -18,7 +18,7 @@ describe('kabsch', function () {
       [13, 14]
     ];
 
-    console.log(kabsch(set1, set2));
+    console.log();
 
     assert(Math.abs(kabsch(set1, set2) - 18.85) < .01);
 
